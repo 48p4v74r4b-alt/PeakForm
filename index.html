@@ -3,120 +3,1040 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PeakForm Fitness</title>
+<meta name="theme-color" content="#090d0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>PeakForm 2.0</title>
+
 <style>
-body{font-family:Arial;background:#101820;color:white;margin:0;padding:18px}
-h1{color:#42e6b5}
-.card{background:#202d38;padding:18px;border-radius:15px;margin:15px 0}
-input,select,button{padding:12px;margin:5px 0;width:100%;box-sizing:border-box;border-radius:8px}
-button{background:#42e6b5;border:0;font-weight:bold}
-input,select{background:#fff;color:#111}
-small{color:#b5c3cb}
+:root{
+  --bg:#090d0b;
+  --card:#151c18;
+  --green:#a5ff45;
+  --text:#f4f7f2;
+  --muted:#9aa79e;
+  --line:#29352d;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+  padding-bottom:90px;
+}
+header{
+  padding:24px 18px 12px;
+}
+h1{font-size:30px;margin:0}
+h2{font-size:21px;margin:8px 0 16px}
+h3{margin:5px 0 12px}
+p{color:var(--muted);line-height:1.5}
+small{color:var(--muted)}
+.green{color:var(--green)}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:17px;
+  margin-bottom:14px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.stat{
+  font-size:26px;
+  font-weight:800;
+  margin:7px 0;
+}
+button{
+  background:var(--green);
+  color:#10170d;
+  border:0;
+  border-radius:12px;
+  padding:13px 15px;
+  font-size:15px;
+  font-weight:750;
+  cursor:pointer;
+}
+button.secondary{
+  background:#29362d;
+  color:white;
+}
+button.danger{
+  background:#54292c;
+  color:white;
+}
+button:disabled{opacity:.4}
+input,select,textarea{
+  width:100%;
+  background:#0c120e;
+  color:white;
+  border:1px solid #3a483d;
+  border-radius:10px;
+  padding:12px;
+  font-size:16px;
+  margin:7px 0 12px;
+}
+label{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin-top:8px;
+}
+main{padding:0 16px}
+.page{display:none}
+.page.active{display:block}
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#121a15;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-around;
+  padding:10px 2px max(12px,env(safe-area-inset-bottom));
+  z-index:10;
+}
+nav button{
+  background:transparent;
+  color:var(--muted);
+  padding:7px 3px;
+  font-size:11px;
+  flex:1;
+}
+nav button.active{color:var(--green)}
+.exercise{
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+}
+.exercise:last-child{border:0}
+.setrow{
+  display:grid;
+  grid-template-columns:34px 1fr 1fr 50px;
+  gap:8px;
+  align-items:center;
+}
+.setrow input{
+  margin:5px 0;
+  text-align:center;
+}
+.setrow button{
+  padding:10px 0;
+}
+.badge{
+  display:inline-block;
+  background:#283b24;
+  color:var(--green);
+  border-radius:20px;
+  padding:6px 10px;
+  font-size:12px;
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.row button{flex-shrink:0}
+canvas{
+  width:100%;
+  height:180px;
+}
+.hidden{display:none}
+.full{width:100%}
+hr{
+  border:0;
+  border-top:1px solid var(--line);
+  margin:18px 0;
+}
 </style>
 </head>
+
 <body>
-<h1>🏔️ PeakForm</h1>
-<p>Three Peaks + Wedding Fitness Tracker</p>
-<div class="card">
-<h2>🎯 Your Goals</h2>
-<p>🏔️ Three Peaks: 20 May 2027</p>
-<p>💍 Wedding: 26 June 2027</p>
-<p>⚖️ Target weight: 71 kg</p>
-</div>
-<div class="card">
-<h2>💪 Log Workout</h2>
-<input id="date" type="date">
-<select id="type">
-<option>Strength</option>
-<option>Incline Walk</option>
-<option>Boxing</option>
-<option>Hiking</option>
-<option>Other</option>
-</select>
-<input id="details" placeholder="Exercise, sets, reps, weight, distance...">
-<input id="duration" type="number" placeholder="Duration (minutes)">
-<button onclick="saveWorkout()">Save Workout</button>
-</div>
-<div class="card">
-<h2>❤️ Health Stats</h2>
-<input id="weight" type="number" step="0.1" placeholder="Weight (kg)">
-<input id="waist" type="number" step="0.1" placeholder="Waist (cm)">
-<input id="hr" type="number" placeholder="Average heart rate">
-<input id="vo2" type="number" step="0.1" placeholder="VO₂ max">
-<button onclick="saveHealth()">Save Health Stats</button>
-</div>
-<div class="card">
-<h2>📊 Workout History</h2>
-<div id="history"></div>
-</div>
-<div class="card">
-<h2>📈 Latest Health Stats</h2>
-<div id="healthHistory"></div>
-</div>
-<div class="card">
-<h2>💾 Backup</h2>
-<button onclick="backup()">Export My Data</button>
-<small>Data is stored in this browser. Export regularly.</small>
-</div>
+
+<header>
+  <div class="green" style="font-weight:800;letter-spacing:2px">
+    PEAKFORM
+  </div>
+  <h1>Performance Hub <span class="green">2.0</span></h1>
+  <small id="today"></small>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+  <div class="card">
+    <span class="badge" id="rotation">Loading rotation...</span>
+    <h2 id="todayWorkout">Today's training</h2>
+    <p id="todayDescription"></p>
+    <button class="full" onclick="openTodayWorkout()">
+      View Today's Workout →
+    </button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <small>THREE PEAKS</small>
+      <div class="stat green" id="peaksCountdown">—</div>
+      <small>Days remaining</small>
+    </div>
+    <div class="card">
+      <small>WEDDING</small>
+      <div class="stat green" id="weddingCountdown">—</div>
+      <small>Days remaining</small>
+    </div>
+    <div class="card">
+      <small>LATEST WEIGHT</small>
+      <div class="stat" id="homeWeight">80 kg</div>
+      <small>Goal: 71 kg</small>
+    </div>
+    <div class="card">
+      <small>LATEST WAIST</small>
+      <div class="stat" id="homeWaist">95 cm</div>
+      <small>Starting point: 95 cm</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Quick Log</h3>
+    <div class="grid">
+      <button onclick="showPage('workouts')">💪 Gym</button>
+      <button onclick="showPage('cardio')">🏔️ Cardio</button>
+      <button onclick="showPage('health')">❤️ Health</button>
+      <button onclick="showPage('progress')">📈 Progress</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Your Goals</h3>
+    <p>🏔️ National Three Peaks — 20 May 2027</p>
+    <p>💍 Wedding — 26 June 2027</p>
+    <p>🎯 Leaner waist, defined chest, stronger legs and improved hiking endurance.</p>
+  </div>
+</section>
+
+<section id="workouts" class="page">
+  <h2>💪 Strength Training</h2>
+
+  <div class="card">
+    <label>Choose workout</label>
+    <select id="workoutSelect" onchange="renderWorkout()">
+      <option value="upperA">Upper A — Chest Focus</option>
+      <option value="lowerA">Lower A — Strength</option>
+      <option value="upperB">Upper B — Back & Shoulders</option>
+      <option value="lowerB">Lower B — Mountain Legs</option>
+    </select>
+
+    <label>Workout date</label>
+    <input type="date" id="workoutDate">
+
+    <div id="exerciseList"></div>
+
+    <button class="full" onclick="saveWorkout()">
+      ✓ Finish & Save Workout
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Add Custom Exercise</h3>
+    <label>Exercise name</label>
+    <input id="customExercise" placeholder="e.g. Dumbbell chest press">
+    <label>Number of sets</label>
+    <input id="customSets" type="number" value="3" min="1" max="10">
+    <button class="full secondary" onclick="addCustomExercise()">
+      + Add Exercise
+    </button>
+  </div>
+</section>
+
+<section id="cardio" class="page">
+  <h2>🏔️ Cardio & Boxing</h2>
+
+  <div class="card">
+    <label>Activity</label>
+    <select id="cardioType" onchange="updateCardioFields()">
+      <option>Incline treadmill</option>
+      <option>Outdoor hike</option>
+      <option>Boxing</option>
+      <option>Walking</option>
+      <option>Rowing</option>
+      <option>Air bike</option>
+      <option>Other cardio</option>
+    </select>
+
+    <label>Date</label>
+    <input type="date" id="cardioDate">
+
+    <label>Duration (minutes)</label>
+    <input type="number" id="cardioDuration" placeholder="45">
+
+    <label>Distance (km)</label>
+    <input type="number" id="cardioDistance" step="0.1" placeholder="3.4">
+
+    <div id="inclineFields">
+      <label>Treadmill incline (%)</label>
+      <input type="number" id="cardioIncline" step="0.5" placeholder="9">
+      <label>Speed (km/h)</label>
+      <input type="number" id="cardioSpeed" step="0.1" placeholder="4.5">
+    </div>
+
+    <div id="hikeFields" class="hidden">
+      <label>Elevation gained (metres)</label>
+      <input type="number" id="cardioElevation" placeholder="350">
+    </div>
+
+    <div id="boxingFields" class="hidden">
+      <label>Rounds</label>
+      <input type="number" id="boxingRounds" placeholder="4">
+      <label>Minutes per round</label>
+      <input type="number" id="boxingRoundLength" value="3">
+    </div>
+
+    <label>Average heart rate (bpm)</label>
+    <input type="number" id="cardioHR" placeholder="124">
+
+    <label>Effort (1–10)</label>
+    <input type="number" id="cardioEffort" min="1" max="10" placeholder="7">
+
+    <label>Notes</label>
+    <textarea id="cardioNotes" placeholder="How did it feel?"></textarea>
+
+    <button class="full" onclick="saveCardio()">
+      ✓ Save Activity
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Current Treadmill Benchmark</h3>
+    <p><strong class="green">45 minutes</strong> at 9% incline and 4.5 km/h.</p>
+    <p>Average heart rate approximately 124 bpm. Aim to progress gradually while maintaining comfortable breathing.</p>
+  </div>
+</section>
+
+<section id="health" class="page">
+  <h2>❤️ Health Check-In</h2>
+
+  <div class="card">
+    <label>Date</label>
+    <input type="date" id="healthDate">
+
+    <label>Weight (kg)</label>
+    <input type="number" id="weight" step="0.1" placeholder="80">
+
+    <label>Waist (cm)</label>
+    <input type="number" id="waist" step="0.1" placeholder="93.5">
+
+    <label>VO₂ max (Apple Watch estimate)</label>
+    <input type="number" id="vo2" step="0.1" placeholder="35.5">
+
+    <label>Resting heart rate (bpm)</label>
+    <input type="number" id="restingHR" placeholder="60">
+
+    <label>Recovery / notes</label>
+    <textarea id="healthNotes" placeholder="Sleep, soreness, energy..."></textarea>
+
+    <button class="full" onclick="saveHealth()">
+      ✓ Save Health Check-In
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Starting Measurements</h3>
+    <p>Weight: approximately 80 kg</p>
+    <p>Waist: 95 cm initially; most recent reported 93.5 cm</p>
+    <p>VO₂ max estimate: approximately 35–36</p>
+    <p><small>Apple Health data must currently be entered manually.</small></p>
+  </div>
+</section>
+
+<section id="progress" class="page">
+  <h2>📈 Your Progress</h2>
+
+  <div class="card">
+    <h3>Weight (kg)</h3>
+    <canvas id="weightChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>Waist (cm)</h3>
+    <canvas id="waistChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>VO₂ Max</h3>
+    <canvas id="vo2Chart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>Training History</h3>
+    <div id="history"></div>
+  </div>
+
+  <div class="card">
+    <h3>💾 Backup Your Data</h3>
+    <p>Save a copy before changing phones or clearing Safari data.</p>
+    <button class="full" onclick="exportData()">Export Backup</button>
+    <hr>
+    <label>Restore a previous backup</label>
+    <input type="file" id="restoreFile" accept=".json,application/json">
+    <button class="full secondary" onclick="restoreData()">
+      Restore Backup
+    </button>
+  </div>
+</section>
+
+</main>
+
+<nav>
+  <button id="nav-home" class="active" onclick="showPage('home')">🏠<br>Home</button>
+  <button id="nav-workouts" onclick="showPage('workouts')">💪<br>Gym</button>
+  <button id="nav-cardio" onclick="showPage('cardio')">🏔️<br>Cardio</button>
+  <button id="nav-health" onclick="showPage('health')">❤️<br>Health</button>
+  <button id="nav-progress" onclick="showPage('progress')">📈<br>Progress</button>
+</nav>
+
 <script>
-const KEY="peakform_data";
+const KEY="peakform_v2";
+
 let data;
+
 try{
-data=JSON.parse(localStorage.getItem(KEY))||{workouts:[],health:[]};
-}catch(e){data={workouts:[],health:[]}}
-document.getElementById("date").valueAsDate=new Date();
-function persist(){
-try{localStorage.setItem(KEY,JSON.stringify(data))}
-catch(e){alert("Unable to save. Check browser storage.")}
+  data=JSON.parse(localStorage.getItem(KEY));
+}catch(e){
+  data=null;
 }
+
+if(!data || typeof data!=="object"){
+  data={workouts:[],cardio:[],health:[]};
+}
+
+data.workouts ||= [];
+data.cardio ||= [];
+data.health ||= [];
+
+const plans={
+  upperA:{
+    name:"Upper A — Chest Focus",
+    exercises:[
+      ["Smith Flat Bench Press",3,"5–8"],
+      ["Incline Dumbbell Press",3,"8–10"],
+      ["Chest-Supported Dumbbell Row",3,"8–12"],
+      ["Cable Chest Fly",3,"12–15"],
+      ["Dumbbell Lateral Raise",3,"12–15"],
+      ["Triceps Pushdown",3,"10–15"]
+    ]
+  },
+  lowerA:{
+    name:"Lower A — Strength",
+    exercises:[
+      ["Hack Squat",3,"6–10"],
+      ["Leg Press",3,"10–12"],
+      ["Dumbbell Step-Ups",3,"8/leg"],
+      ["Leg Curl",2,"10–15"],
+      ["Calf Raises",3,"12–15"],
+      ["Plank",3,"30–45 sec"]
+    ]
+  },
+  upperB:{
+    name:"Upper B — Back & Shoulders",
+    exercises:[
+      ["Lat Pulldown",3,"8–12"],
+      ["Seated Cable Row",3,"8–12"],
+      ["Smith Incline Chest Press",3,"8–10"],
+      ["Seated Dumbbell Shoulder Press",3,"8–12"],
+      ["Cable Lateral Raise",2,"12–15"],
+      ["Dumbbell Biceps Curl",3,"10–12"],
+      ["Rope Triceps Extension",2,"12–15"]
+    ]
+  },
+  lowerB:{
+    name:"Lower B — Mountain Legs",
+    exercises:[
+      ["Low Step-Ups",3,"12/leg"],
+      ["Step-Downs",3,"8/leg"],
+      ["Reverse Lunges",2,"10/leg"],
+      ["Leg Extensions",2,"12–15"],
+      ["Calf Raises",3,"15–20"],
+      ["Single-Leg Balance",2,"30 sec"]
+    ]
+  }
+};
+
+let activeExercises=[];
+
+function save(){
+  localStorage.setItem(KEY,JSON.stringify(data));
+}
+
+function localDate(){
+  const d=new Date();
+  return d.getFullYear()+"-"+
+    String(d.getMonth()+1).padStart(2,"0")+"-"+
+    String(d.getDate()).padStart(2,"0");
+}
+
+function daysUntil(dateString){
+  const today=new Date();
+  today.setHours(0,0,0,0);
+  const target=new Date(dateString+"T00:00:00");
+  return Math.max(0,Math.ceil((target-today)/86400000));
+}
+
+function offshoreNow(){
+  const start=new Date("2026-11-18T12:00:00");
+  const now=new Date();
+  const days=Math.floor((now-start)/86400000);
+  const cycle=((days%28)+28)%28;
+  return cycle<14;
+}
+
+function showPage(name){
+  document.querySelectorAll(".page").forEach(el=>{
+    el.classList.remove("active");
+  });
+  document.getElementById(name).classList.add("active");
+
+  document.querySelectorAll("nav button").forEach(el=>{
+    el.classList.remove("active");
+  });
+  document.getElementById("nav-"+name).classList.add("active");
+
+  if(name==="progress") renderProgress();
+  if(name==="home") renderHome();
+
+  window.scrollTo(0,0);
+}
+
+function todayPlan(){
+  const day=new Date().getDay();
+  const offshore=offshoreNow();
+
+  const names={
+    1:["upperA","Upper A — Chest Focus"],
+    2:["lowerA","Lower A — Strength"],
+    4:["upperB","Upper B — Back & Shoulders"],
+    5:["lowerB","Lower B — Mountain Legs"]
+  };
+
+  if(names[day]) return names[day];
+
+  if(day===3){
+    return [null,offshore?"Boxing Padwork":"90-Minute Walk"];
+  }
+  if(day===6){
+    return [null,offshore?"Long Incline Treadmill":"Outdoor Hill Hike"];
+  }
+  return [null,"Recovery Day"];
+}
+
+function renderHome(){
+  const offshore=offshoreNow();
+  const plan=todayPlan();
+
+  document.getElementById("rotation").textContent=
+    offshore?"⚓ OFFSHORE ROTATION":"🏡 HOME ROTATION";
+
+  document.getElementById("todayWorkout").textContent=plan[1];
+
+  document.getElementById("todayDescription").textContent=
+    offshore
+    ?"Your offshore training schedule is active."
+    :"Your home training schedule is active.";
+
+  document.getElementById("peaksCountdown").textContent=
+    daysUntil("2027-05-20");
+
+  document.getElementById("weddingCountdown").textContent=
+    daysUntil("2027-06-26");
+
+  const health=[...data.health].sort((a,b)=>b.date.localeCompare(a.date));
+
+  const latestWeight=health.find(x=>x.weight!==null && x.weight!==undefined);
+  const latestWaist=health.find(x=>x.waist!==null && x.waist!==undefined);
+
+  document.getElementById("homeWeight").textContent=
+    latestWeight?latestWeight.weight+" kg":"80 kg";
+
+  document.getElementById("homeWaist").textContent=
+    latestWaist?latestWaist.waist+" cm":"95 cm";
+}
+
+function openTodayWorkout(){
+  const plan=todayPlan();
+
+  if(plan[0]){
+    document.getElementById("workoutSelect").value=plan[0];
+    renderWorkout();
+    showPage("workouts");
+  }else{
+    showPage("cardio");
+  }
+}
+
+function renderWorkout(){
+  const key=document.getElementById("workoutSelect").value;
+  const plan=plans[key];
+
+  activeExercises=plan.exercises.map(ex=>({
+    name:ex[0],
+    target:ex[2],
+    sets:Array.from({length:ex[1]},()=>({
+      weight:"",
+      reps:"",
+      done:false
+    }))
+  }));
+
+  drawExercises();
+}
+
+function drawExercises(){
+  const container=document.getElementById("exerciseList");
+  container.innerHTML="";
+
+  activeExercises.forEach((exercise,ei)=>{
+    const box=document.createElement("div");
+    box.className="exercise";
+
+    const title=document.createElement("h3");
+    title.textContent=exercise.name;
+    box.appendChild(title);
+
+    const target=document.createElement("small");
+    target.textContent="Target: "+exercise.target;
+    box.appendChild(target);
+
+    exercise.sets.forEach((set,si)=>{
+      const row=document.createElement("div");
+      row.className="setrow";
+
+      const number=document.createElement("small");
+      number.textContent="#"+(si+1);
+
+      const weight=document.createElement("input");
+      weight.type="number";
+      weight.step="0.5";
+      weight.placeholder="kg";
+      weight.value=set.weight;
+      weight.oninput=()=>set.weight=weight.value;
+
+      const reps=document.createElement("input");
+      reps.type="text";
+      reps.placeholder="reps";
+      reps.value=set.reps;
+      reps.oninput=()=>set.reps=reps.value;
+
+      const done=document.createElement("button");
+      done.textContent=set.done?"✓":"○";
+      done.className=set.done?"":"secondary";
+      done.onclick=()=>{
+        set.done=!set.done;
+        done.textContent=set.done?"✓":"○";
+        done.className=set.done?"":"secondary";
+      };
+
+      row.append(number,weight,reps,done);
+      box.appendChild(row);
+    });
+
+    const add=document.createElement("button");
+    add.className="secondary";
+    add.style.marginTop="10px";
+    add.textContent="+ Set";
+    add.onclick=()=>{
+      exercise.sets.push({weight:"",reps:"",done:false});
+      drawExercises();
+    };
+
+    box.appendChild(add);
+    container.appendChild(box);
+  });
+}
+
+function addCustomExercise(){
+  const name=document.getElementById("customExercise").value.trim();
+  const count=Number(document.getElementById("customSets").value);
+
+  if(!name || count<1 || count>10){
+    alert("Enter an exercise name and 1–10 sets.");
+    return;
+  }
+
+  activeExercises.push({
+    name:name,
+    target:"Custom",
+    sets:Array.from({length:count},()=>({
+      weight:"",
+      reps:"",
+      done:false
+    }))
+  });
+
+  document.getElementById("customExercise").value="";
+  drawExercises();
+}
+
 function saveWorkout(){
-let d=document.getElementById("date").value;
-let t=document.getElementById("type").value;
-let x=document.getElementById("details").value.trim();
-let m=document.getElementById("duration").value;
-if(!d||!x){alert("Enter a date and workout details");return}
-data.workouts.push({date:d,type:t,details:x,duration:m});
-persist();render();
-document.getElementById("details").value="";
-document.getElementById("duration").value="";
+  const date=document.getElementById("workoutDate").value;
+
+  if(!date){
+    alert("Choose a workout date.");
+    return;
+  }
+
+  const completed=activeExercises.some(ex=>
+    ex.sets.some(set=>set.done || set.weight!=="" || set.reps!=="")
+  );
+
+  if(!completed){
+    alert("Enter at least one set before saving.");
+    return;
+  }
+
+  const key=document.getElementById("workoutSelect").value;
+
+  data.workouts.push({
+    id:Date.now(),
+    date:date,
+    name:plans[key].name,
+    exercises:JSON.parse(JSON.stringify(activeExercises))
+  });
+
+  save();
+  alert("Workout saved! 💪");
+  renderWorkout();
+  showPage("home");
 }
+
+function updateCardioFields(){
+  const type=document.getElementById("cardioType").value;
+
+  document.getElementById("inclineFields").classList.toggle(
+    "hidden",type!=="Incline treadmill"
+  );
+
+  document.getElementById("hikeFields").classList.toggle(
+    "hidden",type!=="Outdoor hike"
+  );
+
+  document.getElementById("boxingFields").classList.toggle(
+    "hidden",type!=="Boxing"
+  );
+}
+
+function numberOrNull(id){
+  const value=document.getElementById(id).value;
+  return value===""?null:Number(value);
+}
+
+function saveCardio(){
+  const date=document.getElementById("cardioDate").value;
+  const duration=numberOrNull("cardioDuration");
+
+  if(!date || duration===null || duration<=0){
+    alert("Enter a date and duration.");
+    return;
+  }
+
+  data.cardio.push({
+    id:Date.now(),
+    date:date,
+    type:document.getElementById("cardioType").value,
+    duration:duration,
+    distance:numberOrNull("cardioDistance"),
+    incline:numberOrNull("cardioIncline"),
+    speed:numberOrNull("cardioSpeed"),
+    elevation:numberOrNull("cardioElevation"),
+    rounds:numberOrNull("boxingRounds"),
+    roundLength:numberOrNull("boxingRoundLength"),
+    heartRate:numberOrNull("cardioHR"),
+    effort:numberOrNull("cardioEffort"),
+    notes:document.getElementById("cardioNotes").value
+  });
+
+  save();
+  alert("Cardio session saved! 🏔️");
+  showPage("home");
+}
+
 function saveHealth(){
-let entry={date:new Date().toISOString().slice(0,10)};
-for(let id of ["weight","waist","hr","vo2"]){
-let v=document.getElementById(id).value;
-if(v!=="")entry[id]=Number(v);
+  const date=document.getElementById("healthDate").value;
+
+  if(!date){
+    alert("Choose a date.");
+    return;
+  }
+
+  const entry={
+    id:Date.now(),
+    date:date,
+    weight:numberOrNull("weight"),
+    waist:numberOrNull("waist"),
+    vo2:numberOrNull("vo2"),
+    restingHR:numberOrNull("restingHR"),
+    notes:document.getElementById("healthNotes").value
+  };
+
+  if(
+    entry.weight===null &&
+    entry.waist===null &&
+    entry.vo2===null &&
+    entry.restingHR===null
+  ){
+    alert("Enter at least one measurement.");
+    return;
+  }
+
+  data.health.push(entry);
+  save();
+  alert("Health check-in saved! ❤️");
+  showPage("home");
 }
-if(Object.keys(entry).length===1){
-alert("Enter at least one measurement");return
+
+function drawChart(id,field){
+  const canvas=document.getElementById(id);
+  const ctx=canvas.getContext("2d");
+
+  const width=canvas.clientWidth||320;
+  const height=180;
+  const ratio=window.devicePixelRatio||1;
+
+  canvas.width=width*ratio;
+  canvas.height=height*ratio;
+  ctx.scale(ratio,ratio);
+
+  ctx.clearRect(0,0,width,height);
+
+  const points=data.health
+    .filter(x=>x[field]!==null && Number.isFinite(x[field]))
+    .sort((a,b)=>a.date.localeCompare(b.date));
+
+  if(!points.length){
+    ctx.fillStyle="#9aa79e";
+    ctx.font="14px Arial";
+    ctx.fillText("Log measurements to see your trend.",12,90);
+    return;
+  }
+
+  const values=points.map(x=>x[field]);
+  let min=Math.min(...values);
+  let max=Math.max(...values);
+
+  if(min===max){
+    min-=1;
+    max+=1;
+  }
+
+  const left=35;
+  const right=width-12;
+  const top=18;
+  const bottom=height-30;
+
+  ctx.strokeStyle="#344237";
+  ctx.lineWidth=1;
+
+  for(let i=0;i<4;i++){
+    const y=top+(bottom-top)*i/3;
+    ctx.beginPath();
+    ctx.moveTo(left,y);
+    ctx.lineTo(right,y);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle="#a5ff45";
+  ctx.lineWidth=3;
+  ctx.beginPath();
+
+  points.forEach((point,i)=>{
+    const x=points.length===1
+      ?(left+right)/2
+      :left+(right-left)*i/(points.length-1);
+
+    const y=bottom-
+      ((point[field]-min)/(max-min))*(bottom-top);
+
+    if(i===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  });
+
+  ctx.stroke();
+
+  points.forEach((point,i)=>{
+    const x=points.length===1
+      ?(left+right)/2
+      :left+(right-left)*i/(points.length-1);
+
+    const y=bottom-
+      ((point[field]-min)/(max-min))*(bottom-top);
+
+    ctx.fillStyle="#a5ff45";
+    ctx.beginPath();
+    ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.fillStyle="#9aa79e";
+  ctx.font="12px Arial";
+  ctx.fillText(max.toFixed(1),2,top+4);
+  ctx.fillText(min.toFixed(1),2,bottom+4);
+
+  ctx.fillText(points[0].date.slice(5),left,bottom+20);
+
+  if(points.length>1){
+    ctx.textAlign="right";
+    ctx.fillText(
+      points[points.length-1].date.slice(5),
+      right,bottom+20
+    );
+    ctx.textAlign="left";
+  }
 }
-data.health.push(entry);persist();render();
+
+function renderProgress(){
+  drawChart("weightChart","weight");
+  drawChart("waistChart","waist");
+  drawChart("vo2Chart","vo2");
+
+  const history=document.getElementById("history");
+  history.innerHTML="";
+
+  const items=[
+    ...data.workouts.map(x=>({...x,category:"Gym"})),
+    ...data.cardio.map(x=>({...x,category:"Cardio"})),
+    ...data.health.map(x=>({...x,category:"Health"}))
+  ].sort((a,b)=>b.date.localeCompare(a.date));
+
+  if(!items.length){
+    history.innerHTML="<p>No sessions logged yet.</p>";
+    return;
+  }
+
+  items.forEach(item=>{
+    const box=document.createElement("div");
+    box.className="exercise";
+
+    const title=document.createElement("strong");
+    title.textContent=
+      item.category==="Gym"?item.name:
+      item.category==="Cardio"?item.type:
+      "Health Check-In";
+
+    const details=document.createElement("p");
+
+    if(item.category==="Gym"){
+      details.textContent=
+        item.exercises.length+" exercises";
+    }else if(item.category==="Cardio"){
+      details.textContent=item.duration+" minutes";
+    }else{
+      details.textContent=[
+        item.weight!==null?item.weight+" kg":"",
+        item.waist!==null?item.waist+" cm waist":"",
+        item.vo2!==null?"VO₂ "+item.vo2:""
+      ].filter(Boolean).join(" · ");
+    }
+
+    const date=document.createElement("small");
+    date.textContent=item.date+" · "+item.category;
+
+    const del=document.createElement("button");
+    del.className="danger";
+    del.textContent="Delete";
+    del.onclick=()=>{
+      if(!confirm("Delete this entry?"))return;
+
+      const collection=
+        item.category==="Gym"?"workouts":
+        item.category==="Cardio"?"cardio":"health";
+
+      data[collection]=data[collection].filter(x=>x.id!==item.id);
+      save();
+      renderProgress();
+    };
+
+    box.append(title,details,date,document.createElement("br"),del);
+    history.appendChild(box);
+  });
 }
-function render(){
-let h=document.getElementById("history");
-h.replaceChildren();
-data.workouts.slice().reverse().forEach(w=>{
-let p=document.createElement("p");
-p.textContent=w.date+" | "+w.type+" | "+w.details+
-(w.duration?" | "+w.duration+" min":"");
-h.appendChild(p);
-});
-let s=document.getElementById("healthHistory");
-s.replaceChildren();
-data.health.slice(-5).reverse().forEach(v=>{
-let p=document.createElement("p");
-p.textContent=Object.entries(v).map(([k,x])=>k+": "+x).join(" | ");
-s.appendChild(p);
-});
+
+function exportData(){
+  const blob=new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="PeakForm-backup-"+localDate()+".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-function backup(){
-let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="peakform-backup.json";
-a.click();
-setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+
+function restoreData(){
+  const file=document.getElementById("restoreFile").files[0];
+
+  if(!file){
+    alert("Choose a backup file first.");
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=()=>{
+    try{
+      const restored=JSON.parse(reader.result);
+
+      if(
+        !Array.isArray(restored.workouts) ||
+        !Array.isArray(restored.cardio) ||
+        !Array.isArray(restored.health)
+      ){
+        throw new Error("Invalid backup");
+      }
+
+      if(!confirm("Replace current data with this backup?"))return;
+
+      data=restored;
+      save();
+      renderHome();
+      renderProgress();
+      alert("Backup restored successfully.");
+    }catch(e){
+      alert("This file is not a valid PeakForm backup.");
+    }
+  };
+
+  reader.readAsText(file);
 }
-render();
+
+function initialise(){
+  const today=localDate();
+
+  document.getElementById("today").textContent=
+    new Date().toLocaleDateString("en-GB",{
+      weekday:"long",
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    });
+
+  document.getElementById("workoutDate").value=today;
+  document.getElementById("cardioDate").value=today;
+  document.getElementById("healthDate").value=today;
+
+  renderWorkout();
+  updateCardioFields();
+  renderHome();
+}
+
+initialise();
 </script>
+
 </body>
 </html>
