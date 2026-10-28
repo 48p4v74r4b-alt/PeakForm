@@ -1,167 +1,120 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#090d0b">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>PeakForm 2.0</title>
-
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>PeakForm 2.1</title>
 <style>
 :root{
-  --bg:#090d0b;
-  --card:#151c18;
-  --green:#a5ff45;
-  --text:#f4f7f2;
-  --muted:#9aa79e;
-  --line:#29352d;
+  --bg:#090d0b;--card:#151c18;--green:#a5ff45;
+  --text:#f4f7f2;--muted:#9aa79e;--line:#29352d;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
+  margin:0;background:var(--bg);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
-  padding-bottom:90px;
+  padding-bottom:100px;
 }
-header{
-  padding:24px 18px 12px;
-}
-h1{font-size:30px;margin:0}
+header{padding:24px 18px 12px}
+h1{font-size:28px;margin:5px 0}
 h2{font-size:21px;margin:8px 0 16px}
 h3{margin:5px 0 12px}
 p{color:var(--muted);line-height:1.5}
 small{color:var(--muted)}
 .green{color:var(--green)}
 .card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:17px;
-  margin-bottom:14px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:16px;margin-bottom:14px;
 }
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.stat{
-  font-size:26px;
-  font-weight:800;
-  margin:7px 0;
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{font-size:26px;font-weight:800;margin:7px 0}
 button{
-  background:var(--green);
-  color:#10170d;
-  border:0;
-  border-radius:12px;
-  padding:13px 15px;
-  font-size:15px;
-  font-weight:750;
-  cursor:pointer;
+  background:var(--green);color:#10170d;border:0;
+  border-radius:12px;padding:13px 15px;
+  font-size:15px;font-weight:750;cursor:pointer;
 }
-button.secondary{
-  background:#29362d;
-  color:white;
-}
-button.danger{
-  background:#54292c;
-  color:white;
-}
-button:disabled{opacity:.4}
+button.secondary{background:#29362d;color:white}
+button.danger{background:#54292c;color:white}
 input,select,textarea{
-  width:100%;
-  background:#0c120e;
-  color:white;
-  border:1px solid #3a483d;
-  border-radius:10px;
-  padding:12px;
-  font-size:16px;
-  margin:7px 0 12px;
+  width:100%;background:#0c120e;color:white;
+  border:1px solid #3a483d;border-radius:10px;
+  padding:12px;font-size:16px;margin:7px 0 12px;
 }
 label{
-  display:block;
-  color:var(--muted);
-  font-size:13px;
-  margin-top:8px;
+  display:block;color:var(--muted);
+  font-size:13px;margin-top:8px;
 }
 main{padding:0 16px}
 .page{display:none}
 .page.active{display:block}
 nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#121a15;
-  border-top:1px solid var(--line);
-  display:flex;
-  justify-content:space-around;
+  position:fixed;bottom:0;left:0;right:0;
+  background:#121a15;border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;
   padding:10px 2px max(12px,env(safe-area-inset-bottom));
   z-index:10;
 }
 nav button{
-  background:transparent;
-  color:var(--muted);
-  padding:7px 3px;
-  font-size:11px;
-  flex:1;
+  background:transparent;color:var(--muted);
+  padding:7px 3px;font-size:11px;flex:1;
 }
 nav button.active{color:var(--green)}
-.exercise{
-  padding:13px 0;
-  border-bottom:1px solid var(--line);
-}
+.exercise{padding:15px 0;border-bottom:1px solid var(--line)}
 .exercise:last-child{border:0}
-.setrow{
-  display:grid;
-  grid-template-columns:34px 1fr 1fr 50px;
-  gap:8px;
-  align-items:center;
-}
-.setrow input{
-  margin:5px 0;
-  text-align:center;
-}
-.setrow button{
-  padding:10px 0;
-}
 .badge{
-  display:inline-block;
-  background:#283b24;
-  color:var(--green);
-  border-radius:20px;
-  padding:6px 10px;
-  font-size:12px;
+  display:inline-block;background:#283b24;color:var(--green);
+  border-radius:20px;padding:6px 10px;font-size:12px;
+}
+.full{width:100%}
+.hidden{display:none}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+canvas{width:100%;height:180px}
+.sethead,.setrow{
+  display:grid;
+  grid-template-columns:28px minmax(76px,1.3fr) minmax(58px,1fr) minmax(58px,1fr) 40px;
+  gap:5px;align-items:center;
+}
+.sethead{
+  font-size:10px;color:var(--muted);
+  margin:15px 0 4px;text-align:center;
+}
+.setrow{margin-bottom:7px}
+.setrow input{
+  margin:0;padding:10px 4px;text-align:center;
+  font-size:15px;min-width:0;
+}
+.setrow button{padding:10px 0}
+.previous{
+  background:#243128;border-radius:8px;
+  text-align:center;padding:8px 3px;
+  font-size:12px;min-height:42px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--green);line-height:1.3;
+}
+.note{
+  border-left:3px solid var(--green);
+  padding:10px 12px;background:#1b281e;
+  border-radius:8px;color:#dce9dc;
+  font-size:13px;line-height:1.5;
 }
 .row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px;
 }
-.row button{flex-shrink:0}
-canvas{
-  width:100%;
-  height:180px;
-}
-.hidden{display:none}
-.full{width:100%}
-hr{
-  border:0;
-  border-top:1px solid var(--line);
-  margin:18px 0;
-}
+.historyitem{padding:12px 0;border-bottom:1px solid var(--line)}
+.historyitem:last-child{border:0}
 </style>
 </head>
-
 <body>
 
 <header>
   <div class="green" style="font-weight:800;letter-spacing:2px">
     PEAKFORM
   </div>
-  <h1>Performance Hub <span class="green">2.0</span></h1>
+  <h1>Performance Hub <span class="green">2.1</span></h1>
   <small id="today"></small>
 </header>
 
@@ -169,8 +122,8 @@ hr{
 
 <section id="home" class="page active">
   <div class="card">
-    <span class="badge" id="rotation">Loading rotation...</span>
-    <h2 id="todayWorkout">Today's training</h2>
+    <span class="badge" id="rotation"></span>
+    <h2 id="todayWorkout"></h2>
     <p id="todayDescription"></p>
     <button class="full" onclick="openTodayWorkout()">
       View Today's Workout →
@@ -190,13 +143,13 @@ hr{
     </div>
     <div class="card">
       <small>LATEST WEIGHT</small>
-      <div class="stat" id="homeWeight">80 kg</div>
+      <div class="stat" id="homeWeight">—</div>
       <small>Goal: 71 kg</small>
     </div>
     <div class="card">
       <small>LATEST WAIST</small>
-      <div class="stat" id="homeWaist">95 cm</div>
-      <small>Starting point: 95 cm</small>
+      <div class="stat" id="homeWaist">—</div>
+      <small>Initial: 95 cm</small>
     </div>
   </div>
 
@@ -211,10 +164,10 @@ hr{
   </div>
 
   <div class="card">
-    <h3>Your Goals</h3>
+    <h3>Your Targets</h3>
     <p>🏔️ National Three Peaks — 20 May 2027</p>
     <p>💍 Wedding — 26 June 2027</p>
-    <p>🎯 Leaner waist, defined chest, stronger legs and improved hiking endurance.</p>
+    <p>🎯 Leaner waist, defined chest and mountain-ready legs.</p>
   </div>
 </section>
 
@@ -231,7 +184,12 @@ hr{
     </select>
 
     <label>Workout date</label>
-    <input type="date" id="workoutDate">
+    <input type="date" id="workoutDate" onchange="drawExercises()">
+
+    <div class="note">
+      🟢 The green column shows your last recorded weight
+      and reps for each exercise. Today's fields stay blank.
+    </div>
 
     <div id="exerciseList"></div>
 
@@ -243,9 +201,11 @@ hr{
   <div class="card">
     <h3>Add Custom Exercise</h3>
     <label>Exercise name</label>
-    <input id="customExercise" placeholder="e.g. Dumbbell chest press">
+    <input id="customExercise" placeholder="e.g. Pec deck">
+
     <label>Number of sets</label>
     <input id="customSets" type="number" value="3" min="1" max="10">
+
     <button class="full secondary" onclick="addCustomExercise()">
       + Add Exercise
     </button>
@@ -310,16 +270,36 @@ hr{
   </div>
 
   <div class="card">
-    <h3>Current Treadmill Benchmark</h3>
-    <p><strong class="green">45 minutes</strong> at 9% incline and 4.5 km/h.</p>
-    <p>Average heart rate approximately 124 bpm. Aim to progress gradually while maintaining comfortable breathing.</p>
+    <h3>Treadmill Benchmark</h3>
+    <p><strong class="green">45 minutes</strong> at 9% incline,
+    4.5 km/h, with average heart rate around 124 bpm.</p>
   </div>
 </section>
 
 <section id="health" class="page">
-  <h2>❤️ Health Check-In</h2>
+  <h2>❤️ Health & Apple Watch</h2>
 
   <div class="card">
+    <h3>⌚ Apple Health Import</h3>
+    <p>Paste the measurements prepared by your Apple Shortcut.</p>
+
+    <label>Apple Health data</label>
+    <textarea id="healthImport" rows="8"
+      placeholder='{"date":"2026-10-28","restingHR":60,"vo2":35.5,"steps":8500,"walkingDistance":6.2}'></textarea>
+
+    <button class="full" onclick="importAppleHealth()">
+      ⌚ Import Apple Health Data
+    </button>
+
+    <p><small>
+      Only data you paste is imported.
+      PeakForm cannot directly read Apple Health.
+    </small></p>
+  </div>
+
+  <div class="card">
+    <h3>Manual Health Check-In</h3>
+
     <label>Date</label>
     <input type="date" id="healthDate">
 
@@ -335,6 +315,12 @@ hr{
     <label>Resting heart rate (bpm)</label>
     <input type="number" id="restingHR" placeholder="60">
 
+    <label>Steps</label>
+    <input type="number" id="steps" placeholder="8500">
+
+    <label>Walking distance (km)</label>
+    <input type="number" id="walkingDistance" step="0.1" placeholder="6.2">
+
     <label>Recovery / notes</label>
     <textarea id="healthNotes" placeholder="Sleep, soreness, energy..."></textarea>
 
@@ -346,9 +332,8 @@ hr{
   <div class="card">
     <h3>Starting Measurements</h3>
     <p>Weight: approximately 80 kg</p>
-    <p>Waist: 95 cm initially; most recent reported 93.5 cm</p>
+    <p>Waist: initially 95 cm, recently 93.5 cm</p>
     <p>VO₂ max estimate: approximately 35–36</p>
-    <p><small>Apple Health data must currently be entered manually.</small></p>
   </div>
 </section>
 
@@ -371,17 +356,30 @@ hr{
   </div>
 
   <div class="card">
-    <h3>Training History</h3>
+    <h3>Resting Heart Rate</h3>
+    <canvas id="hrChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>Daily Steps</h3>
+    <canvas id="stepsChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>Training & Health History</h3>
     <div id="history"></div>
   </div>
 
   <div class="card">
     <h3>💾 Backup Your Data</h3>
-    <p>Save a copy before changing phones or clearing Safari data.</p>
+    <p>Export your records before changing phones or clearing website data.</p>
     <button class="full" onclick="exportData()">Export Backup</button>
+
     <hr>
+
     <label>Restore a previous backup</label>
     <input type="file" id="restoreFile" accept=".json,application/json">
+
     <button class="full secondary" onclick="restoreData()">
       Restore Backup
     </button>
@@ -400,7 +398,6 @@ hr{
 
 <script>
 const KEY="peakform_v2";
-
 let data;
 
 try{
@@ -413,9 +410,9 @@ if(!data || typeof data!=="object"){
   data={workouts:[],cardio:[],health:[]};
 }
 
-data.workouts ||= [];
-data.cardio ||= [];
-data.health ||= [];
+if(!Array.isArray(data.workouts))data.workouts=[];
+if(!Array.isArray(data.cardio))data.cardio=[];
+if(!Array.isArray(data.health))data.health=[];
 
 const plans={
   upperA:{
@@ -493,23 +490,6 @@ function offshoreNow(){
   return cycle<14;
 }
 
-function showPage(name){
-  document.querySelectorAll(".page").forEach(el=>{
-    el.classList.remove("active");
-  });
-  document.getElementById(name).classList.add("active");
-
-  document.querySelectorAll("nav button").forEach(el=>{
-    el.classList.remove("active");
-  });
-  document.getElementById("nav-"+name).classList.add("active");
-
-  if(name==="progress") renderProgress();
-  if(name==="home") renderHome();
-
-  window.scrollTo(0,0);
-}
-
 function todayPlan(){
   const day=new Date().getDay();
   const offshore=offshoreNow();
@@ -521,15 +501,36 @@ function todayPlan(){
     5:["lowerB","Lower B — Mountain Legs"]
   };
 
-  if(names[day]) return names[day];
+  if(names[day])return names[day];
 
   if(day===3){
     return [null,offshore?"Boxing Padwork":"90-Minute Walk"];
   }
+
   if(day===6){
     return [null,offshore?"Long Incline Treadmill":"Outdoor Hill Hike"];
   }
+
   return [null,"Recovery Day"];
+}
+
+function showPage(name){
+  document.querySelectorAll(".page").forEach(el=>{
+    el.classList.remove("active");
+  });
+
+  document.getElementById(name).classList.add("active");
+
+  document.querySelectorAll("nav button").forEach(el=>{
+    el.classList.remove("active");
+  });
+
+  document.getElementById("nav-"+name).classList.add("active");
+
+  if(name==="progress")renderProgress();
+  if(name==="home")renderHome();
+
+  window.scrollTo(0,0);
 }
 
 function renderHome(){
@@ -543,8 +544,8 @@ function renderHome(){
 
   document.getElementById("todayDescription").textContent=
     offshore
-    ?"Your offshore training schedule is active."
-    :"Your home training schedule is active.";
+      ?"Your offshore training schedule is active."
+      :"Your home training schedule is active.";
 
   document.getElementById("peaksCountdown").textContent=
     daysUntil("2027-05-20");
@@ -552,16 +553,18 @@ function renderHome(){
   document.getElementById("weddingCountdown").textContent=
     daysUntil("2027-06-26");
 
-  const health=[...data.health].sort((a,b)=>b.date.localeCompare(a.date));
+  const health=[...data.health].sort((a,b)=>
+    b.date.localeCompare(a.date)
+  );
 
-  const latestWeight=health.find(x=>x.weight!==null && x.weight!==undefined);
-  const latestWaist=health.find(x=>x.waist!==null && x.waist!==undefined);
+  const latestWeight=health.find(x=>x.weight!=null);
+  const latestWaist=health.find(x=>x.waist!=null);
 
   document.getElementById("homeWeight").textContent=
     latestWeight?latestWeight.weight+" kg":"80 kg";
 
   document.getElementById("homeWaist").textContent=
-    latestWaist?latestWaist.waist+" cm":"95 cm";
+    latestWaist?latestWaist.waist+" cm":"93.5 cm";
 }
 
 function openTodayWorkout(){
@@ -593,11 +596,38 @@ function renderWorkout(){
   drawExercises();
 }
 
+/*
+  NEW: Find the most recent saved performance for an
+  exercise before the selected workout date.
+*/
+function previousExercise(name,date){
+  const matching=data.workouts
+    .filter(w=>w.date<date)
+    .sort((a,b)=>b.date.localeCompare(a.date));
+
+  for(const workout of matching){
+    const exercise=(workout.exercises||[]).find(ex=>
+      ex.name.trim().toLowerCase()===
+      name.trim().toLowerCase()
+    );
+
+    if(exercise)return exercise;
+  }
+
+  return null;
+}
+
+/*
+  NEW: Show previous weight and reps, set by set.
+  Today's inputs remain empty.
+*/
 function drawExercises(){
   const container=document.getElementById("exerciseList");
   container.innerHTML="";
 
-  activeExercises.forEach((exercise,ei)=>{
+  const date=document.getElementById("workoutDate").value||localDate();
+
+  activeExercises.forEach(exercise=>{
     const box=document.createElement("div");
     box.className="exercise";
 
@@ -609,12 +639,40 @@ function drawExercises(){
     target.textContent="Target: "+exercise.target;
     box.appendChild(target);
 
+    const previous=previousExercise(exercise.name,date);
+
+    const head=document.createElement("div");
+    head.className="sethead";
+
+    ["Set","Previous","Weight kg","Reps","✓"].forEach(label=>{
+      const cell=document.createElement("span");
+      cell.textContent=label;
+      head.appendChild(cell);
+    });
+
+    box.appendChild(head);
+
     exercise.sets.forEach((set,si)=>{
       const row=document.createElement("div");
       row.className="setrow";
 
       const number=document.createElement("small");
       number.textContent="#"+(si+1);
+
+      const prev=document.createElement("div");
+      prev.className="previous";
+
+      const oldSet=previous && previous.sets
+        ?previous.sets[si]
+        :null;
+
+      if(oldSet && (oldSet.weight!=="" || oldSet.reps!=="")){
+        const oldWeight=oldSet.weight===""?"—":oldSet.weight+" kg";
+        const oldReps=oldSet.reps===""?"—":oldSet.reps+" reps";
+        prev.textContent=oldWeight+" × "+oldReps;
+      }else{
+        prev.textContent="—";
+      }
 
       const weight=document.createElement("input");
       weight.type="number";
@@ -632,13 +690,14 @@ function drawExercises(){
       const done=document.createElement("button");
       done.textContent=set.done?"✓":"○";
       done.className=set.done?"":"secondary";
+
       done.onclick=()=>{
         set.done=!set.done;
         done.textContent=set.done?"✓":"○";
         done.className=set.done?"":"secondary";
       };
 
-      row.append(number,weight,reps,done);
+      row.append(number,prev,weight,reps,done);
       box.appendChild(row);
     });
 
@@ -646,8 +705,13 @@ function drawExercises(){
     add.className="secondary";
     add.style.marginTop="10px";
     add.textContent="+ Set";
+
     add.onclick=()=>{
-      exercise.sets.push({weight:"",reps:"",done:false});
+      exercise.sets.push({
+        weight:"",
+        reps:"",
+        done:false
+      });
       drawExercises();
     };
 
@@ -660,7 +724,7 @@ function addCustomExercise(){
   const name=document.getElementById("customExercise").value.trim();
   const count=Number(document.getElementById("customSets").value);
 
-  if(!name || count<1 || count>10){
+  if(!name || !Number.isInteger(count) || count<1 || count>10){
     alert("Enter an exercise name and 1–10 sets.");
     return;
   }
@@ -688,7 +752,9 @@ function saveWorkout(){
   }
 
   const completed=activeExercises.some(ex=>
-    ex.sets.some(set=>set.done || set.weight!=="" || set.reps!=="")
+    ex.sets.some(set=>
+      set.done || set.weight!=="" || set.reps!==""
+    )
   );
 
   if(!completed){
@@ -706,7 +772,9 @@ function saveWorkout(){
   });
 
   save();
-  alert("Workout saved! 💪");
+
+  alert("Workout saved! Your previous weights are now recorded. 💪");
+
   renderWorkout();
   showPage("home");
 }
@@ -777,23 +845,106 @@ function saveHealth(){
     waist:numberOrNull("waist"),
     vo2:numberOrNull("vo2"),
     restingHR:numberOrNull("restingHR"),
+    steps:numberOrNull("steps"),
+    walkingDistance:numberOrNull("walkingDistance"),
     notes:document.getElementById("healthNotes").value
   };
 
-  if(
-    entry.weight===null &&
-    entry.waist===null &&
-    entry.vo2===null &&
-    entry.restingHR===null
-  ){
+  const fields=[
+    "weight","waist","vo2","restingHR",
+    "steps","walkingDistance"
+  ];
+
+  if(fields.every(field=>entry[field]===null)){
     alert("Enter at least one measurement.");
     return;
   }
 
   data.health.push(entry);
   save();
+
   alert("Health check-in saved! ❤️");
   showPage("home");
+}
+
+/*
+  NEW: Import Apple Health measurements prepared
+  by a Shortcut as JSON.
+*/
+function importAppleHealth(){
+  const raw=document.getElementById("healthImport").value.trim();
+
+  if(!raw){
+    alert("Paste your Apple Health data first.");
+    return;
+  }
+
+  let imported;
+
+  try{
+    imported=JSON.parse(raw);
+  }catch(e){
+    alert("That isn't valid JSON. Check the shortcut output.");
+    return;
+  }
+
+  if(!imported || Array.isArray(imported) || typeof imported!=="object"){
+    alert("Expected one health measurement object.");
+    return;
+  }
+
+  const date=imported.date||localDate();
+
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+     Number.isNaN(new Date(date+"T12:00:00").getTime())){
+    alert("Use a date in YYYY-MM-DD format.");
+    return;
+  }
+
+  const fields=[
+    "weight","waist","vo2","restingHR",
+    "steps","walkingDistance"
+  ];
+
+  const entry={
+    id:Date.now(),
+    date:date,
+    notes:"Imported from Apple Health via Shortcut"
+  };
+
+  let count=0;
+
+  fields.forEach(field=>{
+    const value=imported[field];
+
+    if(value===undefined || value===null || value===""){
+      entry[field]=null;
+      return;
+    }
+
+    const numeric=Number(value);
+
+    if(Number.isFinite(numeric) && numeric>=0){
+      entry[field]=numeric;
+      count++;
+    }else{
+      entry[field]=null;
+    }
+  });
+
+  if(count===0){
+    alert("No valid measurements found.");
+    return;
+  }
+
+  data.health.push(entry);
+  save();
+
+  document.getElementById("healthImport").value="";
+
+  alert("Apple Health measurements imported! ⌚");
+  renderHome();
+  showPage("progress");
 }
 
 function drawChart(id,field){
@@ -807,11 +958,11 @@ function drawChart(id,field){
   canvas.width=width*ratio;
   canvas.height=height*ratio;
   ctx.scale(ratio,ratio);
-
   ctx.clearRect(0,0,width,height);
 
   const points=data.health
-    .filter(x=>x[field]!==null && Number.isFinite(x[field]))
+    .filter(x=>x[field]!=null && Number.isFinite(Number(x[field])))
+    .map(x=>({...x,[field]:Number(x[field])}))
     .sort((a,b)=>a.date.localeCompare(b.date));
 
   if(!points.length){
@@ -830,7 +981,7 @@ function drawChart(id,field){
     max+=1;
   }
 
-  const left=35;
+  const left=42;
   const right=width-12;
   const top=18;
   const bottom=height-30;
@@ -858,7 +1009,7 @@ function drawChart(id,field){
     const y=bottom-
       ((point[field]-min)/(max-min))*(bottom-top);
 
-    if(i===0) ctx.moveTo(x,y);
+    if(i===0)ctx.moveTo(x,y);
     else ctx.lineTo(x,y);
   });
 
@@ -899,6 +1050,8 @@ function renderProgress(){
   drawChart("weightChart","weight");
   drawChart("waistChart","waist");
   drawChart("vo2Chart","vo2");
+  drawChart("hrChart","restingHR");
+  drawChart("stepsChart","steps");
 
   const history=document.getElementById("history");
   history.innerHTML="";
@@ -916,7 +1069,7 @@ function renderProgress(){
 
   items.forEach(item=>{
     const box=document.createElement("div");
-    box.className="exercise";
+    box.className="historyitem";
 
     const title=document.createElement("strong");
     title.textContent=
@@ -927,15 +1080,16 @@ function renderProgress(){
     const details=document.createElement("p");
 
     if(item.category==="Gym"){
-      details.textContent=
-        item.exercises.length+" exercises";
+      details.textContent=(item.exercises||[]).length+" exercises";
     }else if(item.category==="Cardio"){
       details.textContent=item.duration+" minutes";
     }else{
       details.textContent=[
-        item.weight!==null?item.weight+" kg":"",
-        item.waist!==null?item.waist+" cm waist":"",
-        item.vo2!==null?"VO₂ "+item.vo2:""
+        item.weight!=null?item.weight+" kg":"",
+        item.waist!=null?item.waist+" cm waist":"",
+        item.vo2!=null?"VO₂ "+item.vo2:"",
+        item.restingHR!=null?"Resting HR "+item.restingHR:"",
+        item.steps!=null?item.steps+" steps":""
       ].filter(Boolean).join(" · ");
     }
 
@@ -944,7 +1098,9 @@ function renderProgress(){
 
     const del=document.createElement("button");
     del.className="danger";
+    del.style.marginTop="10px";
     del.textContent="Delete";
+
     del.onclick=()=>{
       if(!confirm("Delete this entry?"))return;
 
@@ -953,6 +1109,7 @@ function renderProgress(){
         item.category==="Cardio"?"cardio":"health";
 
       data[collection]=data[collection].filter(x=>x.id!==item.id);
+
       save();
       renderProgress();
     };
@@ -970,11 +1127,14 @@ function exportData(){
 
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
+
   a.href=url;
   a.download="PeakForm-backup-"+localDate()+".json";
+
   document.body.appendChild(a);
   a.click();
   a.remove();
+
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
@@ -1004,8 +1164,10 @@ function restoreData(){
 
       data=restored;
       save();
+
       renderHome();
       renderProgress();
+
       alert("Backup restored successfully.");
     }catch(e){
       alert("This file is not a valid PeakForm backup.");
@@ -1037,6 +1199,5 @@ function initialise(){
 
 initialise();
 </script>
-
 </body>
 </html>
